@@ -1,5 +1,7 @@
 main.*
 !main.tex
+!main.pdf
 
 
 indent.log
+*.fls
