@@ -19,7 +19,7 @@
   \begin{center}
     \includegraphics[width=\columnwidth]{doc/img/ransom-evolution.eps}
   \end{center}
-  \caption{}
+  \caption{Development of major ransomware families (1989–2021). The first know ransomware, AIDS Trojan, was introduced in 1989. \cite{Evolution-Ransomware}.}
   \label{fig:ransom-evolution}
 \end{figure}
 
@@ -130,9 +130,15 @@ Mamba \cite{mamba-petya} はハードディスク全体を暗号化したのち
 また，Petya \cite{mamba-petya} はWindowsシステムのマスターファイルテーブル (MFT)
 \footnote{MFTはWindowsシステム内に存在するファイルの物理的な位置，ファイル名，作成者などのメタデータを管理するデータ構造である．}
 を暗号化することでファイルのアクセスを不可能にする．
-
-今日のクラウドサービスの隆盛に伴い，クラウド環境への攻撃に特化したランサムウェアも確認されている．
 DarkSide \cite{DarkSide42:online} はVMWare ESXi \cite{VMwarevS52:online}
-のホストマシン上で実行される．DarkSideは実行中の仮想マシン (VM) を強制終了させ，VM関連のファイルを暗号化する．
+のホストマシン上で実行される．DarkSideは実行中の仮想マシン (VM) を強制終了させ，VMの仮想ディスクなどの関連ファイルを暗号化する．
 これらのファイルは，典型的には\texttt{/vmfs/volumes}ディレクトリ以下のファイルであるが，
 仮想マシンからは認識できない．
+
+今日のクラウドサービスの隆盛に伴い，クラウド環境を対象としたランサムウェア攻撃が増加している．
+ALIBABA Cloudの仮想ストレージサービスは2023年の第三四半期のみで1000件以上の被害報告をユーザから受けており，
+2021年と比較して118\%の増加率を示している \cite{wang2024ransom}．
+さらにZscaler社  は，クラウドサービスやクラウド上のワークフローに最適化されたランサムウェア
+が開発されることを予測\cite{zscaler-ransomware}しており，
+新しいタイプのランサムウェアの出現に備える必要がある．
+
