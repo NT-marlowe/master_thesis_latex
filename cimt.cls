@@ -441,6 +441,14 @@
 \pagenumbering{arabic}
 \onecolumn
 \raggedbottom
+
+\newcommand\figref[1]{\textbf{図~\ref{#1}}}
+\newcommand\tabref[1]{\textbf{表~\ref{#1}}}
+
+
+
+
 \endinput
+
 %%
 %% End of file `cimt.cls'.
