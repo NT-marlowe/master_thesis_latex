@@ -15,7 +15,15 @@
 ロッカーランサムウェアは暗号化を行わず，デスクトップのスクリーンやブラウザをロックすることで被害者がシステムを利用できないようにする．
 本研究は暗号化ランサムウェアを対象としているため，本稿では暗号化ランサムウェアを単に「ランサムウェア」と呼ぶことにする．
 
-AIDS Trojan \cite{aids-trojan} は1989年に最初のランサムウェアとして登場した．
+\begin{figure}[t]
+  \begin{center}
+    \includegraphics[width=\columnwidth]{doc/img/ransom-evolution.eps}
+  \end{center}
+  \caption{}
+  \label{fig:ransom-evolution}
+\end{figure}
+
+\figref{fig:ransom-evolution}に示すように，AIDS Trojan \cite{aids-trojan} は1989年に最初のランサムウェアとして登場した．
 AIDS Trojanは被害者に郵送されたフロッピーディスクを介して感染し，Windowsシステムを対象としていた．
 その後インターネットの普及に伴い，ランサムウェアによる被害が増加し始めた．
 2005年に登場したGPCode \cite{PGPCoder42:online} はフィッシングメールを介して感染し，独自の暗号化アルゴリズムによってファイルを暗号化した．
@@ -33,7 +41,6 @@ AIDS Trojanは被害者に郵送されたフロッピーディスクを介して
   \item ランサムウェアの開発と配布を有料で行うサービスであるRansomware as a Service (RaaS) が登場し，専門知識が無くとも容易に攻撃を実施することができるようになった．
 
   \item 無差別的な攻撃から，特定の高価値な組織 (政府機関や大企業など) を対象とした高度な攻撃に移行しつつある \cite{early-detection}．
-
 \end{itemize}
 
 \section{ランサムウェアの分類}
@@ -115,6 +122,17 @@ RSAが最も頻繁に，楕円曲線暗号が次いで使用されているこ�
 近年の著名なランサムウェアはハイブリッド暗号化を採用しているものが非常に多い \cite{begovic2023cryptographic}．
 代表例としてはWannaCry \cite{WannaCry} やCTBLocker \cite{ctb-locker} が挙げられる．
 
+\subsection{暗号化の対象に基づく分類}
+ランサムウェアはOS上でユーザが扱うデータファイル (e.g. .docx, .xlsx, .jpg) を暗号化することが一般的であるが，
+ファイル以外の単位で暗号化を行うランサムウェアも存在する．
+Mamba \cite{mamba-petya} はハードディスク全体を暗号化したのち
+マスターブートレコード (MBR) を書き換えてOSの正常な起動を阻害し，OS起動時にランサムノートが表示されるようにする．
+また，Petya \cite{mamba-petya} はWindowsシステムのマスターファイルテーブル (MFT)
+\footnote{MFTはWindowsシステム内に存在するファイルの物理的な位置，ファイル名，作成者などのメタデータを管理するデータ構造である．}
+を暗号化することでファイルのアクセスを不可能にする．
 
-
-
+今日のクラウドサービスの隆盛に伴い，クラウド環境への攻撃に特化したランサムウェアも確認されている．
+DarkSide \cite{DarkSide42:online} はVMWare ESXi \cite{VMwarevS52:online}
+のホストマシン上で実行される．DarkSideは実行中の仮想マシン (VM) を強制終了させ，VM関連のファイルを暗号化する．
+これらのファイルは，典型的には\texttt{/vmfs/volumes}ディレクトリ以下のファイルであるが，
+仮想マシンからは認識できない．
