@@ -239,3 +239,18 @@ RaaSを提供する犯罪者グループであるDarkSide \footnote{DarkSideと�
 システムバックアップによる復旧が行われた．
 ただしログはバックアップの対象外であり復旧作業中にログが消失したため，感染経路や感染の原因は特定されていない．
 
+\subsection{株式会社KADOKAWAへの攻撃 (2024年)}
+株式会社KADOKAWAは2024年6月にランサムウェア攻撃を受けたことを発表し，
+動画配信サービスをはじめとする主要サービスの一部が一時的に停止した\cite{kadokawa-apology}．
+この攻撃の対象は株式会社ドワンゴが使用するファイルサーバであり，ファイルの暗号化のみならずデータ窃取も行われた．
+その結果，株式会社ドワンゴの従業員やユーザなど，合計で25万人以上の個人情報が流出したとされる．
+この個人情報データはBlackSuitというランサムウェア犯罪グループによってダークネット上のリークサイトに公開された \cite{kadokawa-leak-PPI}．
+\begin{figure}[t]
+  \begin{center}
+    \includegraphics[width=0.8\columnwidth]{doc/img/BlackSuit-2024-06-27-060714.eps}
+  \end{center}
+  \caption{A post by BlackSuit detailing their alleged access to KADOKAWA’s networks, encryption of the infrastructure,
+    and theft of 1.5TB of data. \cite{kadokawa-leak-PPI}}
+  \label{fig:kadokawa-leak}
+\end{figure}
+
