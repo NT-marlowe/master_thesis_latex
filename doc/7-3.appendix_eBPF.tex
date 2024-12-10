@@ -29,3 +29,21 @@ BPFはLinux カーネルのv3.18にて大幅に拡張が行われ，extended BPF
 認識されるようになった．
 
 \section{eBPFのアーキテクチャ}
+eBPFシステムの概要を\figref{fig:ebpf-overview}に示す．
+特殊なC言語で記述されたeBPFプログラムはBPFバイトコードにコンパイルされ，\texttt{bpf}システムコールを通じてカーネルにロードされる．
+ロードされたeBPFプログラムはeBPF verifierによって検証され，安全性が確認された後にJITコンパイルされ，カーネル内で実行される．
+eBPFにおける重要な要素について詳述する．
+\begin{figure}[t]
+  \begin{center}
+    \includegraphics[width=0.8\columnwidth]{doc/img/ebpf-overview.eps}
+  \end{center}
+  \caption{Overview of eBPF system. \cite{WhatiseB81:online}}
+  \label{fig:ebpf-overview}
+\end{figure}
+
+\subsection{イベント駆動型アーキテクチャ}
+eBPFはイベント駆動型のアーキテクチャを採用している．
+すなわち，開発者はeカーネル空間またはユーザ空間で発生する特定のイベントをeBPFプログラムでフックし，イベント発生時にプログラムが実行される
+ようにカーネルの動作を拡張することができる．
+eBPFプログラムでイベントをフックすることを「eBPFプログラムをアタッチする」と表現するが，
+プログラムのロードおよびアンロード，アタッチおよびデタッチは動的に行えるように実装されている．
