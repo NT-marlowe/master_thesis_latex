@@ -1,5 +1,6 @@
 \chapter{eBPF}
-\section{Berkeley Packet Filter}
+\section{歴史的背景}
+\subsection{Berkeley Packet Filter}
 StevenとVan \cite{berkeley-packet-filter}は1993年に，Unix系のOS上でパケットキャプチャを効率的に行うためのアーキテクチャである
 Berkeley Packet Filterを提案した．
 これ以降，Berkeley Packet Filterを「BPF」と表記する．
@@ -7,5 +8,24 @@ BPFが登場する以前のパケットキャプチャでは，カーネル空�
 これが無駄なオーバーヘッドの原因となっていた．
 \cite{berkeley-packet-filter}では特殊な32ビットの命令セットを解釈してパケットフィルタリングを行う擬似マシン (BPF pseudo-machine) を提案し，
 この擬似マシンをカーネル空間で動作させることでオーバーヘッドを軽減することを目指した．
+
+BPFはLinuxカーネルのv2.1.75にてLinux Socket Filterとして導入され，\texttt{tcpdump}コマンドの高速化に利用された．
 既存のシステムとの比較では，BPF は最大で20倍程度高速にパケットキャプチャを行うことができた．
 
+\subsection{eBPF: extended BPF}
+BPFはLinux カーネルのv3.18にて大幅に拡張が行われ，extended BPFすなわちeBPFと呼ばれるようになった．
+拡張された項目は多岐にわたるが，代表的な項目を以下に示す．
+\begin{itemize}
+  \item BPF命令セットが32ビットから64ビットに書き直され，実行効率が向上した．
+  \item eBPF mapというデータ構造が導入され，ユーザ空間とカーネル空間の間でのデータ共有や，eBPFプログラム内のデータ保存またはプログラム間でのデータ共有が可能になった．
+  \item eBPFプログラムが安全に実行できることを検証するeBPF verifierが追加された．
+\end{itemize}
+
+上述した拡張に加えて，eBPFはその適用範囲を大きく拡大してきた．
+ネットワーク分野においては，Linuxネットワークスタック内の様々なレイヤー，例えばトランスポート層 (e.g. TCP/UDP) や
+データリンク層 (e.g. ネットワークデバイスドライバ) などを対象に処理を記述することが可能となった．
+さらにeBPFはパフォーマンストレーシングやセキュリティ機能の向上にも活用されるようになっている．
+これに伴い，「BPF」という用語は元々の「Berkeley Packet Filter」という意味を超えて，独立したフレームワークを指す言葉として
+認識されるようになった．
+
+\section{eBPFのアーキテクチャ}
