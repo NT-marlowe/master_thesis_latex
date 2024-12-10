@@ -130,7 +130,7 @@ Mamba \cite{mamba-petya} はハードディスク全体を暗号化したのち
 また，Petya \cite{mamba-petya} はWindowsシステムのマスターファイルテーブル (MFT)
 \footnote{MFTはWindowsシステム内に存在するファイルの物理的な位置，ファイル名，作成者などのメタデータを管理するデータ構造である．}
 を暗号化することでファイルのアクセスを不可能にする．
-DarkSide \cite{DarkSide42:online} はVMWare ESXi \cite{VMwarevS52:online}
+DarkSide \cite{DarkSide42:online} ランサムウェアはVMWare ESXi \cite{VMwarevS52:online}
 のホストマシン上で実行される．DarkSideは実行中の仮想マシン (VM) を強制終了させ，VMの仮想ディスクなどの関連ファイルを暗号化する．
 これらのファイルは，典型的には\texttt{/vmfs/volumes}ディレクトリ以下のファイルであるが，
 仮想マシンからは認識できない．
@@ -199,10 +199,21 @@ SOPHOS社のレポート \cite{sophos-report:online} によると，
 また非営利の組織であっても，メディア報道によってネガティブなイメージが拡散された結果
 組織の活動に支障が出るおそれもある．
 
-
-
 \subsection{長期的なリスク}
 CyberReason社の調査 \cite{cyberreason-report}によると，ランサムウェア攻撃を受けて身代金を支払った企業は，その8割が
 再度ランサムウェア攻撃を受ける．
 したがって身代金支払いによって一度の攻撃に対処したとしても，その後も継続的に攻撃の対象となるリスクがある．
 
+\section{主要なランサムウェアインシデント}
+\subsection{WannaCryの事例 (2017年)}
+ランサムウェアWannaCryによる攻撃は2017年5月に発生したランサムウェアインシデントである，
+WannaCryはWindowsサーバの任意コード実行脆弱性 (CVE-2017-0143) を利用して，Microsoftによる脆弱性修正パッチが適用されていない
+Windows7マシンを中心として感染を広げた．
+
+スペインの大手通信事業者であるテレフォニカが最初の標的であり，その後ヨーロッパ諸国および世界中で感染が拡大して
+最終的には100カ国以上で被害が発生した \cite{wannacry-attack}．
+英国におけるNHS (National Health Service，国民保健サービス) の被害は特筆すべきものであり，
+NHS全体で19,000件以上の来院予約のキャンセルと9200万ポンドの損失が生じ，
+手術や診察の中止により人名にかかわる被害も報告された \cite{kaspersky-wannacry}．
+
+\subsection{}
