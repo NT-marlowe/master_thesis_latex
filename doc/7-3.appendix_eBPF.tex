@@ -1,0 +1,11 @@
+\chapter{eBPF}
+\section{Berkeley Packet Filter}
+StevenとVan \cite{berkeley-packet-filter}は1993年に，Unix系のOS上でパケットキャプチャを効率的に行うためのアーキテクチャである
+Berkeley Packet Filterを提案した．
+これ以降，Berkeley Packet Filterを「BPF」と表記する．
+BPFが登場する以前のパケットキャプチャでは，カーネル空間で取得したパケットをすべてユーザー空間にコピーしてからフィルタリングしていて，
+これが無駄なオーバーヘッドの原因となっていた．
+\cite{berkeley-packet-filter}では特殊な32ビットの命令セットを解釈してパケットフィルタリングを行う擬似マシン (BPF pseudo-machine) を提案し，
+この擬似マシンをカーネル空間で動作させることでオーバーヘッドを軽減することを目指した．
+既存のシステムとの比較では，BPF は最大で20倍程度高速にパケットキャプチャを行うことができた．
+
