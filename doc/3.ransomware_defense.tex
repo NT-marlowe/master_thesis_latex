@@ -28,29 +28,44 @@ SpyCloud社 \cite{spycloud-ransomware} によると，ランサムウェアのIn
   \caption{Techniques for Initial Access and general countermeasures}
   \begin{tabular}{|c|c|}
     \hline
-    \textbf{Techniques for Initial Access} & \textbf{Countermeasures} \\
+    \textbf{Initial Accessの手法} & \textbf{対策} \\
     \hline
-    Phishing                               &
+    フィッシング                     &
     \begin{tabular}{c}
-      Email filtering \\ User awareness training
+      メールフィルタリングを強化する \\
+      組織構成員の教育を行う
     \end{tabular}
     \\
     % Email filteringUser awareness training,         \\
     \hline
-    Misconfigured IAM settings             &
+    IAM設定の不備                   &
     \begin{tabular}{c}
-      Multi factor authentication \\ Regular audit
+      多要素認証を導入する
       % Email filtering \\ User awareness training
     \end{tabular}
     \\
     \hline
-    Session hijacking through cookie theft &
+    Cookie窃取によるセッションハイジャック     &
     \begin{tabular}{c}
-      Enable Secure and HTTPOnly attribute \\
-      Multi factor authentication
+      Secure属性やHTTPOnly属性を強制する \\
+      多要素認証を導入する
     \end{tabular}
     \\
     \hline
   \end{tabular}
 \end{table}
+
+\section{ランサムウェア検知}
+\subsection{特徴量}
+ランサムウェアを検知する手法で用いられる特徴量は，
+実行ファイルの解析から得られる静的データと，実行ファイルを実行した際にプロセスの振る舞いから得られる動的データに分類される．
+静的データを用いた検知を静的検知，動的データを用いた検知を動的検知と呼ぶ．
+静的検知と動的検知は組み合わせて使用されることもあり，これをハイブリッド検知と呼ぶ．
+
+静的検知では実行ファイルにおけるランサムウェア特有の構造的特徴を分析する．
+典型的な静的データはファイルのハッシュ値，文字列，関数呼び出しなどである ．
+文字列としては"ransom"や"bitcoin"などのランサムノートに頻出する文字列や，
+過去にランサムウェアが使用していたドメイン文字列やIPアドレスなどが確認される\cite{berrueta2019survey}．
+また関数呼び出しについては，暗号化やファイルアクセスといった操作の有無を，ランサムウェアと良性アプリケーションの区別に使用することができる \cite{Evolution-Ransomware}．
+しかし，静的データは一般に難読化や圧縮などの手法に弱く，さらに新種のランサムウェアに対して有効ではないことが多いという問題が指摘されている \cite{mitigation-modern}．
 
