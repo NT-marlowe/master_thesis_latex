@@ -92,6 +92,23 @@ Brownorら \cite{brownor2024ransomware} は提案した検知手法の検知レ�
 \section{ランサムウェア被害からの復旧}
 \subsection{バックアップによる復旧}
 \subsection{暗号化鍵の取得による復旧}
+\ref{subsec:encrypt-algo}節で述べたように，共通鍵暗号では暗号化と復号に同じ鍵を使用する．
+そのため共通鍵暗号を利用するランサムウェアに対しては，暗号化に使用される鍵を取得することができればデータを復号することができる．
+PayBreak \cite{kolodenker2017paybreak} はこの点に着目して開発された手法で，Windows OSが提供する暗号化ライブラリを
+フックして暗号化鍵を取得する．
+取得された鍵は事前にユーザが登録した公開鍵によって暗号化されたのち，追記のみが可能なデータストアに保存される．
+\begin{figure}[t]
+  \begin{center}
+    \includegraphics[width=0.8\columnwidth]{doc/img/paybreak-overview.eps}
+  \end{center}
+  \caption{Overview of PayBreak. \cite{kolodenker2017paybreak}}
+  \label{fig:paybreak-overview}
+\end{figure}
+PayBreakは暗号化ライブラリの動的リンクと静的リンクの両方に対応している．
+さらに代替となる暗号化ライブラリが登場した場合でも，マルウェア解析によって一度暗号化関数を特定することができれば，
+その関数をフック対象として容易に追加することができる．
+しかしながら，PayBreakは非対称鍵暗号を利用するランサムウェアには対応していない．
+
 \subsection{SSDの特性を利用した復旧}
 \subsection{ファイルシステムの拡張による復旧}
 
