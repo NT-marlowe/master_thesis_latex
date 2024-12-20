@@ -140,6 +140,20 @@ SSDの特性を活用したこれらの手法は，ランサムウェア検知�
 ランサムウェアの進化に追随してファームウェアを頻繁に更新することが非現実的であるからだ．
 
 \subsection{ファイルシステムの拡張による復旧}
-いくつかの先行研究では，
+いくつかの先行研究では，ファイルシステムを拡張することでランサムウェアによるデータ侵害からの復旧を実現している．
+ShieldFS \cite{shieldFS} はOSのネイティブなファイルシステムにカーネルモジュールを適用し，
+任意のプロセスのファイル書き込みまたは削除のI/Oリクエストに対してCOW (Copy on Write) を行うデータ保護システムである．
+概要を\figref{fig:shieldFS}に示す．
+ShiledFSはすべてのプロセスの低レベルのI/Oリクエスト，および不審なプロセスの暗号化処理を監視してプロセスごとの悪意スコアを計算するモジュールを持つ．
+あるプロセスの悪意スコアが閾値を超えた場合，COWのコピー元となっているファイルを用いて，そのプロセスによって更新されたファイルを復旧する．
+
+\begin{figure}[t]
+  \begin{center}
+    \includegraphics[width=0.8\columnwidth]{doc/img/shieldFS.eps}
+  \end{center}
+  \caption{On the right ShieldFS shadowing a file offended by ransomware malicious write (MW), in comparison to standard filesystems (on the left). \cite{shieldFS}}
+  \label{fig:shieldFS}
+\end{figure}
+
 
 
