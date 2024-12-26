@@ -75,6 +75,21 @@ CWDはLinuxカーネルにおいて各ユーザプロセスの状態を管理す
 
 
 \subsection{Evacuation Module}
+Evacuation Moduleは，Process Monitorによってリングバッファにデータが書き込まれるたびに呼び出しを行い，
+平文データ，元ファイルの相対パスとCWD，オフセットを取得する．
+その後絶対パスを構成し，絶対パスで指定されるファイルがData Shelter内に存在しなければ設計で示したようにファイルを作成する．
+そしてオフセットで指定される位置に平文データを書き込む．
+\figref{fig:evac-mon-impl}にEvacuation Moduleの実装を示す．
+\begin{figure}[t]
+  \begin{center}
+    \includegraphics[width=\columnwidth]{doc/img/evac_mon_impl.eps}
+  \end{center}
+  \caption{foobar}
+  \label{fig:evac-mon-impl}
+\end{figure}
+
+
+
 \subsection{Data Shelter}
 本研究の実装では，root権限をもつユーザのみ読み書きできるディレクトリを作成し，これをData Shelterとして扱った．
 ユーザ権限で実行されるランサムウェアはこのディレクトリのファイルにアクセスできないため，ランサムウェアから一定レベルの隔離が実現されている．
