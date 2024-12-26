@@ -42,7 +42,8 @@ CollectorはCapturerが取得した平文データに対して，
 \texttt{read(2)}をフックすることでポインタとFDの対応関係を取得することができる．
 この対応関係を参照し，
 \texttt{open(2)}システムコール (FDを返り値として戻す) のフックから相対または絶対パスを，
-\texttt{lseek(2)}および\texttt{read(2)}システムコール (FDを引数に取り，FDに紐づくファイルのオフセットを更新する)のフックからオフセットを取得可能である．
+\texttt{lseek(2)}および\texttt{read(2)}システムコール (FDを引数に取り，FDに紐づくファイルのオフセットを更新する) のフックからオフセットを取得可能である．
+\texttt{open(2)}, \texttt{read(2)}, \texttt{lseek(2)}の関数シグネチャを\coderef{code:syscalls}に示す．
 より詳細には，以下の手順でFDの値から元ファイルの絶対パスとオフセットを取得する．
 \\
 \\
@@ -59,6 +60,19 @@ CWDはLinuxカーネルにおいて各ユーザプロセスの状態を管理す
 この性質を利用して，FDをkeyとし，オフセットをvalueとするハッシュマップにオフセットを保存する．
 \texttt{open(2)}のフックによりファイルが開かれた際にハッシュマップにkey = 0, value = FD のエントリを追加しておき，
 \texttt{lseek(2)}および\texttt{read(2)}が実行された際にvalueを更新しておく．
+
+\begin{lstlisting}[caption=Signatures of the related system calls. The comment lines indicate the return value on success / error., label=code:syscalls, language=C]
+  // a file descriptor / -1
+  int open(const char *pathname, int flags, ...
+        /* mode_t mode */ );
+        
+  // the number of bytes read / -1
+  ssize_t read(int fd, void buf[.count], size_t count);
+
+  // the resulting offset location in bytes / -1
+  off_t lseek(int fd, off_t offset, int whence);
+\end{lstlisting}
+
 
 \subsection{Evacuation Module}
 \subsection{Data Shelter}
