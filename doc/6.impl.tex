@@ -75,18 +75,46 @@ CWDはLinuxカーネルにおいて各ユーザプロセスの状態を管理す
 
 
 \subsection{Evacuation Module}
-Evacuation Moduleは，Process Monitorによってリングバッファにデータが書き込まれるたびに呼び出しを行い，
+Evacuation Moduleは，Capturerによってリングバッファにデータが書き込まれるたびに呼び出しを行い，
 平文データ，元ファイルの相対パスとCWD，オフセットを取得する．
 その後絶対パスを構成し，絶対パスで指定されるファイルがData Shelter内に存在しなければ設計で示したようにファイルを作成する．
 そしてオフセットで指定される位置に平文データを書き込む．
-\figref{fig:evac-mon-impl}にEvacuation Moduleの実装を示す．
+
+eBPFプログラムであるCapturerがリングバッファにデータを書き込むと，本稿の実装においてEvacuation Moduleは以下の3つの処理を順に行う．
+\begin{itemize}
+  \item Read：data availability notificationをカーネル空間から受信し，リングバッファからバイナリデータを読み込む．
+  \item Decode：リングバッファから取得したバイナリデータを，平文データ，元ファイルの相対パスとCWD，オフセットにデコードする．
+  \item Write：平文データを元ファイルの絶対パスとオフセットを用いてData Shelterに書き込む．
+\end{itemize}
+先行研究 \cite{css2024} では上記の処理を逐次的に実行していたが，
+実験結果からランサムウェアのデータ暗号化の速度に対してEvacuation Moduleのデータ退避スループットが不十分であることがわかった．
+さらに予備実験から，上記3つの処理の中でDecode処理がボトルネックとなっていることが判明した．
+これらの実験結果は\ref{chap:eval}章で報告している．
+
+本研究では，処理のパイプライン化と並列化によってEvacuation Moduleの性能を向上させることを目指した．
+\figref{fig:evac-mon-impl}に高速化を施したEvacuation Moduleの実装を示す．
 \begin{figure}[t]
   \begin{center}
     \includegraphics[width=\columnwidth]{doc/img/evac_mon_impl.eps}
   \end{center}
-  \caption{foobar}
+  \caption{Implementation of the Evacuation Module with parallelization and pipelining.
+    The indices shown in the diagram are used only for illustrative purposes to indicate
+    the order of data blocks and to visualize the reordering process. In the actual implementation,
+    such indices are not explicitly assigned.
+  }
   \label{fig:evac-mon-impl}
 \end{figure}
+まずRead，Decode，Writeの各処理を個別のスレッドで実行しスレッド間で処理すべきデータを授受するように実装して，パイプライン処理を実現した．
+なお，ここでいうスレッドはOSのスレッドではなく，Evacuation Moduleの実装に使用したGo言語の機能であるgoroutine \cite{TheGoMem67:online}
+のスレッドを指す．スレッド間の通信にはGo言語の機能であるchannelを用いた．
+パイプライン処理によって，Evacuation ModuleのスループットはボトルネックであるDecode処理に律速される．
+予備実験ではDecode処理がRead処理やWrite処理と比較して4倍程度の時間を要していたため，
+Decode処理を並列化することでボトルネックの解消を行った．
+並列化によってDecode1回あたりの実行的な処理時間を短縮させた．
+
+
+
+
 
 
 
