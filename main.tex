@@ -26,6 +26,19 @@
     captionpos = t % キャプションの位置 t: 上、b: 下
 }
 
+\usepackage[dvipdfmx]{hyperref}
+\usepackage{pxjahyper} % (u)pLaTeXのときのみかく
+\hypersetup{%
+ setpagesize=false,%
+ bookmarks=true,%
+ bookmarksdepth=tocdepth,%
+ bookmarksnumbered=true,%
+ colorlinks=true,%
+ pdftitle={},%
+ pdfsubject={},%
+ pdfauthor={},%
+ pdfkeywords={}}
+
 % 論文タイトル
 \jtitle{ファイル単位のバックアップを用いた\\ランサムウェア攻撃に対する\\リアクティブなデータ保護手法}
 % 長い時には自動的に改行されるが，次のように明示的に改行することもできる．
