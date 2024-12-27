@@ -68,7 +68,7 @@ network based (実行中のプログラムが送信または受信するネッ�
   \begin{center}
     \includegraphics[width=\columnwidth]{doc/img/detection_overview.eps}
   \end{center}
-  \caption{Distribution of detection techniques and detection features used in previous ransomware detection studies. \cite{Evolution-Ransomware}}
+  \caption{Distribution of detection techniques and detection features used in previous ransomware detection studies for PC/workstation. \cite{Evolution-Ransomware}}
   \label{fig:detection-overview}
 \end{figure}
 
@@ -90,6 +90,16 @@ API呼び出しは実行ファイル中のシステムライブラリの動的�
 一部のランサムウェアは暗号化が完了したファイルの拡張子を変更することがあるため，ファイル拡張子の変更も動的データとして利用されることがある\cite{medhat2018new}．
 ネットワークトラフィックに関しては，主にランサムウェアとC2サーバとの通信を検知するために使用可能である．
 送信元や宛先のIPアドレス，ポート番号，プロトコル，ドメイン名が使用されることが多い\cite{Evolution-Ransomware}．
+
+\subsection{代表的な検知手法}
+\subsubsection{機械学習による検知}
+\figref{fig:detection-overview}が示すように，ランサムウェア検知手法では機械学習が広く使用されている．
+\cite{alraizza2023ransomware}は2017年から2022年までに提案された機械学習ベースの検知手法を調査しており，
+本稿ではこの調査結果をもとに機械学習による検知手法を紹介する．
+
+SSD-Insider \cite{baek2018ssd} はSSD上のデータのランサムウェアによる上書きのパターンを検知するために，
+\subsubsection{ルールベースの検知}
+\subsubsection{デコイファイルによる検知}
 
 \subsection{検知レイテンシ}
 動的検知あるいはハイブリッド検知において，ランサムウェアが実行されてから検知されるまでの時間を本稿では検知レイテンシと呼ぶ．
