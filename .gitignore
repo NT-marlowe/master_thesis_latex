@@ -5,4 +5,4 @@ main.*
 
 indent.log
 *.fls
-doc/img/*.png
+doc/img/**/*.png
