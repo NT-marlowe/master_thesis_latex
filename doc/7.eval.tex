@@ -45,22 +45,23 @@ OpenSSLが提供するコマンドを使用して，指定したバイト長の�
 Evacuation Moduleが実行する3つの処理Read，Decode，Writeのそれぞれの処理時間の分布を\figref{fig:elapsed-time}に示す．
 \begin{figure}[h]
   \centering
-  \begin{minipage}[b]{0.49\columnwidth}
+  \begin{subfigure}[b]{0.48\columnwidth}
     \centering
     \includegraphics[width=\columnwidth]{doc/img/eval/seqential_vs_parallel_match_p4_exp.eps}
     % \caption{Match rates by original file size. The horizontal axis is presented on a common logarithmic scale,
     % comparing results from the preliminary and main experiments.}
-    \caption{tmp}
+    \caption{Match rates by original file size of 1KB, 10KB, $\ldots$, 100MB.}
     \label{fig:seq-vs-par-exp}
-  \end{minipage}
-  \begin{minipage}[b]{0.49\columnwidth}
+  \end{subfigure}
+  \hspace{0.02\columnwidth}
+  \begin{subfigure}[b]{0.48\columnwidth}
     \centering
     \includegraphics[width=\columnwidth]{doc/img/eval/seqential_vs_parallel_match_p4_inc.eps}
     % \caption{Match rates by original file size,
     % comparing results from the preliminary and main experiments.}
-    \caption{foobar}
+    \caption{Match rates by original file size of 1MB, 2MB, $\ldots$, 10MB.}
     \label{fig:seq-vs-par-inc}
-  \end{minipage}
+  \end{subfigure}
   \caption{Match rates by original file size, comparing results from the preliminary and main experiments.
     The horizontal axis in the left figure uses a common logarithmic scale.}
 \end{figure}
