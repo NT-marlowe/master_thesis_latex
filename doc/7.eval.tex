@@ -39,6 +39,7 @@ OpenSSLが提供するコマンドを使用して，指定したバイト長の�
 この時の一致率は$\frac{2}{5}=0.4$である．
 
 \subsection{予備実験の結果}
+\label{subsec:preliminary-result}
 先行研究\cite{css2024}で示した実装をによる提案手法の一致率を予備実験で評価した．
 結果を\figref{fig:seq-vs-par-exp}および\figref{fig:seq-vs-par-inc}に示す．
 Evacuation Moduleが実行する3つの処理Read，Decode，Writeのそれぞれの処理時間の分布を\figref{fig:elapsed-time}に示す．
@@ -47,22 +48,27 @@ Evacuation Moduleが実行する3つの処理Read，Decode，Writeのそれぞ�
   \begin{minipage}[b]{0.49\columnwidth}
     \centering
     \includegraphics[width=\columnwidth]{doc/img/eval/seqential_vs_parallel_match_p4_exp.eps}
-    \caption{左}
+    % \caption{Match rates by original file size. The horizontal axis is presented on a common logarithmic scale,
+    % comparing results from the preliminary and main experiments.}
     \label{fig:seq-vs-par-exp}
   \end{minipage}
   \begin{minipage}[b]{0.49\columnwidth}
     \centering
     \includegraphics[width=\columnwidth]{doc/img/eval/seqential_vs_parallel_match_p4_inc.eps}
-    \caption{右}
+    % \caption{Match rates by original file size,
+    % comparing results from the preliminary and main experiments.}
     \label{fig:seq-vs-par-inc}
   \end{minipage}
+  \caption{Match rates by original file size. Results from the preliminary and main experiments are compared.
+    In the left figure the horizontal axis is presented on a common logarithmic scale.}
 \end{figure}
 
 \begin{figure}[t]
   \begin{center}
     \includegraphics[width=\columnwidth]{doc/img/eval/hakohige_sequential.eps}
   \end{center}
-  \caption{foobar}
+  \caption{Boxplot of processing times for the three operations in the Evacuation Module: Read, Decode, and Write.
+    Entries with processing times exceeding 1000 µs were excluded; only 2 out of 976 total entries were removed.}
   \label{fig:elapsed-time}
 \end{figure}
 

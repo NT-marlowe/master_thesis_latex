@@ -7,7 +7,7 @@
 Linux環境にて実装を行った．
 実装に使用したシステムの環境を\tabref{tab:impl-env}に示す．
 \begin{table}[t]
-  \caption{Implementation environment for 提案手法.}
+  \caption{Implementation environment for the proposed method.}
   \label{tab:impl-env}
   \hbox to\hsize{\hfil
     \begin{tabular}{l|lll}
@@ -89,7 +89,8 @@ eBPFプログラムであるCapturerがリングバッファにデータを書�
 先行研究 \cite{css2024} では上記の処理を逐次的に実行していたが，
 実験結果からランサムウェアのデータ暗号化の速度に対してEvacuation Moduleのデータ退避スループットが不十分であることがわかった．
 さらに予備実験から，上記3つの処理の中でDecode処理がボトルネックとなっていることが判明した．
-これらの実験結果は\ref{chap:eval}章で報告している．
+% これらの実験結果は\ref{chap:eval}章で報告している．
+これらの実験結果は\ref{subsec:preliminary-result}節で報告している．
 
 本研究では，処理のパイプライン化と並列化によってEvacuation Moduleの性能を向上させることを目指した．
 \figref{fig:evac-mon-impl}に高速化を施したEvacuation Moduleの実装を示す．
@@ -118,11 +119,6 @@ Decode処理を並列化することでボトルネックの解消を行った�
 そのままの順番でData Shelterに書き込むとファイルデータが正しく復元されない．
 本研究の実装ではWrite処理において平文データの元ファイル上のオフセットが利用可能であるため，
 オフセットで指定される位置にファイルポインタを移動してからデータを書き込むことでこの問題に対処した．
-
-
-
-
-
 
 \subsection{Data Shelter}
 本研究の実装では，root権限をもつユーザのみ読み書きできるディレクトリを作成し，これをData Shelterとして扱った．
