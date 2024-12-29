@@ -50,6 +50,7 @@ Evacuation Moduleが実行する3つの処理Read，Decode，Writeのそれぞ�
     \includegraphics[width=\columnwidth]{doc/img/eval/seqential_vs_parallel_match_p4_exp.eps}
     % \caption{Match rates by original file size. The horizontal axis is presented on a common logarithmic scale,
     % comparing results from the preliminary and main experiments.}
+    \caption{tmp}
     \label{fig:seq-vs-par-exp}
   \end{minipage}
   \begin{minipage}[b]{0.49\columnwidth}
@@ -57,10 +58,11 @@ Evacuation Moduleが実行する3つの処理Read，Decode，Writeのそれぞ�
     \includegraphics[width=\columnwidth]{doc/img/eval/seqential_vs_parallel_match_p4_inc.eps}
     % \caption{Match rates by original file size,
     % comparing results from the preliminary and main experiments.}
+    \caption{foobar}
     \label{fig:seq-vs-par-inc}
   \end{minipage}
-  \caption{Match rates by original file size. Results from the preliminary and main experiments are compared.
-    In the left figure the horizontal axis is presented on a common logarithmic scale.}
+  \caption{Match rates by original file size, comparing results from the preliminary and main experiments.
+    The horizontal axis in the left figure uses a common logarithmic scale.}
 \end{figure}
 
 \begin{figure}[t]
@@ -72,3 +74,13 @@ Evacuation Moduleが実行する3つの処理Read，Decode，Writeのそれぞ�
   \label{fig:elapsed-time}
 \end{figure}
 
+\subsection{元ファイルのサイズに対する一致率の変化}
+本稿では先行研究 \cite{css2024} と同様に，
+1KB，10KB，$\ldots$，100MBのサイズの元ファイルに対して実験を行い，一致率を計算した．
+Decode処理の並列度は4に，リングバッファのサイズは1MiBに設定した．
+その結果を\figref{fig:seq-vs-par-exp}に示す．
+また，1MBから10MBまで1MB刻みのサイズのファイルを生成し実験を行った．並列度とリングバッファの設定は同一である．
+結果を\figref{fig:seq-vs-par-inc}に示す．
+先行研究 \cite{css2024} で示された一致率からの向上が確認され，
+高速化，すなわちEvacuation Moduleのパイプライン化とデコード処理の並列化，が保護性能の改善に寄与したことがわかった．
+性能改善の程度は元ファイルのサイズが大きいほど顕著であり，100MBの元ファイルに対しては20倍以上の差が見られた．
