@@ -1,9 +1,9 @@
-\chapter{Fugaの設計}
+\chapter{提案手法の設計}
 \label{chap:design}
 
 \section{概要}
-Fugaの設計を\figref{fig:system-architecture}に示す．
-Fugaはコンポーネントとして\textbf{Detector}，\textbf{Process Monitor}，\textbf{Evacuation Module}，\textbf{Data Shelter}を含む．
+提案手法の設計を\figref{fig:system-architecture}に示す．
+提案手法はコンポーネントとして\textbf{Detector}，\textbf{Process Monitor}，\textbf{Evacuation Module}，\textbf{Data Shelter}を含む．
 
 ランサムウェアの疑いがあるプロセスをDetectorが検出してProcess Monitorに通知する．
 Process Monitorは指定されたプロセスが侵害しようとするファイルのデータを取得してEvacuation Moduleに送信する．
@@ -13,7 +13,7 @@ Evacuation ModuleはProcess Monitorから受け取ったデータを処理し，
 \begin{figure}[t]
   \centering
   \includegraphics[width=\columnwidth]{doc/img/system_overview_half_width.eps}
-  \caption{The overview of Fuga, the proposed system.}
+  \caption{The overview of 提案手法, the proposed system.}
   \label{fig:system-architecture}
 \end{figure}
 

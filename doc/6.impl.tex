@@ -1,5 +1,5 @@
-\chapter{Fugaの実装}
-\ref{chap:design}章で述べたFugaの設計をもとにFugaを実装した．
+\chapter{提案手法の実装}
+\ref{chap:design}章で述べた提案手法の設計をもとに提案手法を実装した．
 本稿の実装は，TMP節で述べたケースの実例として，OpenSSLを利用して暗号化を行うランサムウェアを対象としている．
 カーネル空間のプログラムはeBPF \cite{WhatiseB81:online} を利用して，
 ユーザ空間のプログラムはGo言語を用いて実装した．
@@ -7,7 +7,7 @@
 Linux環境にて実装を行った．
 実装に使用したシステムの環境を\tabref{tab:impl-env}に示す．
 \begin{table}[tb]
-  \caption{Implementation environment for Fuga.}
+  \caption{Implementation environment for 提案手法.}
   \label{tab:impl-env}
   \hbox to\hsize{\hfil
     \begin{tabular}{l|lll}
@@ -20,7 +20,7 @@ Linux環境にて実装を行った．
 \end{table}
 
 \section{各コンポーネントの実装}
-本節ではFugaの実装特有の詳細を説明する．
+本節では提案手法の実装特有の詳細を説明する．
 Detectorの実装は本研究のスコープ外であることに注意する．
 
 \subsection{Process Monitor}
