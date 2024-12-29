@@ -1,2 +1,65 @@
 \chapter{Fugaの設計}
 \label{chap:design}
+
+\section{概要}
+Fugaの設計を\figref{fig:system-architecture}に示す．
+Fugaはコンポーネントとして\textbf{Detector}，\textbf{Process Monitor}，\textbf{Evacuation Module}，\textbf{Data Shelter}を含む．
+
+ランサムウェアの疑いがあるプロセスをDetectorが検出してProcess Monitorに通知する．
+Process Monitorは指定されたプロセスが侵害しようとするファイルのデータを取得してEvacuation Moduleに送信する．
+Evacuation ModuleはProcess Monitorから受け取ったデータを処理し，Data Shelter内に侵害対象のファイルを退避させる．
+
+% なお，ここでいう「ファイルの侵害」とは，暗号化を行ったりランダムなデータで上書きしたりすることでファイルを利用不可能にする振る舞いを指す．
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{doc/img/system_overview_half_width.eps}
+  \caption{The overview of Fuga, the proposed system.}
+  \label{fig:system-architecture}
+\end{figure}
+
+\section{各コンポーネントの設計}
+% \figref{fig:system-architecture}内の各コンポーネントをそれぞれ説明する．
+\subsection{Detector}
+Detectorはユーザ空間で実行されるプロセスで，自身以外のユーザプロセスを監視している．
+ランサムウェアの可能性が閾値よりも高いプロセスを発見した際に，そのプロセスの識別子をProcess Monitorに通知する．
+% 不審なプロセスが終了した場合も同様に通知を行う．
+なお，\ref{sec:ransom-detect}節で述べたように，ランサムウェアの検知手法は先行研究が多数存在する．
+したがって本研究においてDetectorの機能は利用可能であるという前提を置き，その内部実装はスコープ外とする．
+
+\subsection{Process Monitor}
+Process Monitorはカーネル空間で実行されるプログラムであり，Detectorが指定したユーザプロセスを監視している．
+暗号化前の平文データを取得する\textbf{Capturer}モジュールと，
+ファイルのメタデータを収集する\textbf{Collector}モジュールで構成される．
+Capturerが取得したデータとCollectorが収集したメタデータは，
+一つのデータ構造に格納されてEvacuation Moduleに送信される．
+
+Capturerは監視対象のプロセスが実行する暗号化関数をフックし，関数の引数に渡される平文データのポインタをキャプチャする．
+その後ポインタが指すバッファのデータをコピーすることで平文データを取得する．
+
+CollectorはCapturerと連携し，ファイルの復旧に必要なメタデータ，具体的にはファイルパスと
+コンテンツデータのオフセットを以下のように収集する．
+\\
+ファイルパスの取得：ファイルを開くシステムコールをフックし，ファイルの相対パスをシステムコールの引数から取得する．
+さらに，カーネル内構造体にアクセスして対象プロセスの現在の作業ディレクトリ（Current Working Directory: CWD）を取得する．
+% 相対パスとCWDから，操作対象のファイルの絶対パスを構成する．
+\\
+オフセットの取得：
+あるファイルが監視対象プロセスによって開かれたら，
+そのファイルのオフセットを管理する変数を初期化する．
+ファイルのコンテンツデータをメモリ上に読み込むシステムコール，
+およびファイルの現在のオフセットを操作するシステムコールをフックし，
+各ファイルのオフセットの変化量を取得する．
+この値を用いてファイルのオフセットを動的に更新する．
+
+\subsection{Evacuation Module}
+Evacuation Moduleはユーザ空間で実行されるコンポーネントである．
+Process Monitorから受け取ったファイル関連のデータを基に，退避する対象のファイルを構成し，Data Shelterに書き込む．
+
+\subsection{Data Shelter}
+ランサムウェアによる侵害から隔離されたデータ領域を，本稿ではData Shelterと呼ぶ．
+ランサムウェアを使用した攻撃が発覚した後，本システムの利用者はData Shelterに退避されたファイルを取得し
+侵害されたファイルを復旧することができる．
+
+Data Shelterとして使用するデータストアにはいくつか選択肢が考えられる．
+アクセス制限を適用したローカルのディレクトリが最もシンプルであるが，
+NASなどを利用してホスト外部にData Shelterを配置してもよい．
