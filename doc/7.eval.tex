@@ -85,3 +85,105 @@ Decode処理の並列度は4に，リングバッファのサイズは1MiBに設
 先行研究 \cite{css2024} で示された一致率からの向上が確認され，
 高速化，すなわちEvacuation Moduleのパイプライン化とデコード処理の並列化，が保護性能の改善に寄与したことがわかった．
 性能改善の程度は元ファイルのサイズが大きいほど顕著であり，100MBの元ファイルに対しては20倍以上の差が見られた．
+
+\subsection{パラメータの変更に対する一致率の変化}
+本稿で示した実装は，デコード処理の並列度（$=p$）とリングバッファのサイズ（$=|RB|$）をパラメータとして持つ．
+2つのパラメータのうち一方を固定しもう一方を変化させて実験を行い，各パラメータが一致率に与える影響を調査した．
+
+$p$を固定し$|RB|$を2MiBから2倍ずつ大きくした時の一致率の変化を\figref{fig:buf-capability}に示す．
+$|RB|$より小さいファイルは完全に保護することができるが，$|RB|$より大きいファイルに対しては各$|RB|$間で類似した傾向で保護性能が低下する．
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.9\columnwidth]{doc/img/eval/buf_capability_seek.eps}
+  \caption{Variation of match rate by file size for different ring buffer sizes. The horizontal axis uses a logarithmic scale (base 2).}
+  \label{fig:buf-capability}
+\end{figure}
+
+$|RB|$を固定し$p$を様々な値に設定した時の一致率の変化を\figref{fig:diff-parallelism}に示す．
+$p$を増加させるほど，完全に保護可能なファイルのサイズは増加する傾向が見られる．
+元ファイルのサイズの増加に対して一致率は単調に減少すると期待されるがそうなっておらず，
+並列処理スレッドのスケジューリングの状況に依存して性能が変化する可能性がある．
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\columnwidth]{doc/img/eval/match_seek_diff_parallelism.eps}
+  \caption{Variation of match rate by original file size for different degrees of parallelism $p$.}
+  \label{fig:diff-parallelism}
+\end{figure}
+
+パラメータ$p$を大きくすると多数のスレッドが生成されるため高いコア数が求められ，CPU使用率が増加する．
+一方，$|RB|$を増やすことはカーネル空間のメモリ消費を伴うが，32MiB程度の設定は現実的であり，
+計算リソースに対する保護性能の向上効果が大きいと我々は考える．
+もちろん$p$と$|RB|$の両方を同時に大きくすることも可能である．
+
+しかしながら，パラメータを調整しても100MB〜数GBオーダーの大きさのファイルを完全に保護することは現実的ではない．
+頻繁に更新されないファイルならば定期的なスナップショットを利用してバックアップを確保することが望ましく，
+保護したいファイルの大きさに応じて適切な戦略が異なるといえる．
+
+\section{オーバーヘッドの評価}
+\subsection{CPU使用率とI/O wait}
+本稿で示す実装では，Data Shelterとして使用されているディレクトリに大量にデータの書き込みが発生する．
+また，ランサムウェアが高速にファイルを暗号化する場合，Process MonitorおよびEvacuation Moduleは高い頻度で
+データを処理する必要がある．
+したがって提案手法はCPU使用率およびディスクI/Oにオーバーヘッドを発生させることが予想されるため，これらのメトリクスを計測した．
+
+メトリクスの取得には\texttt{iostat}を利用した．
+\texttt{iostat}はユーザ空間およびカーネル空間のCPU使用率の平均値，I/O wait率の平均値，ブロックデバイスごとのread/writeの量などを出力するコマンドである，
+本研究では1秒ごとにデータを記録する設定を用いた．
+汎用的なマクロベンチマークのセットであるsysbench \cite{sysbench:online} の\texttt{fileio}ベンチマークを使って
+16MiBのファイルを128個生成し，暗号化プログラムによって各ファイルを暗号化することでワークロードを発生させた．
+暗号化プログラムによる暗号化を開始した時点を$t = 0$とし，30秒の間\texttt{iostat}の出力を続けた．
+
+システム全体のベースライン (A)，Fugaを使用せずに暗号化を行なった場合 (B)，Fugaを使用して暗号化を行なった場合 (C) の3パターンで計測を行った．
+計測間のばらつきを抑えるために，計測は各パターンで5回ずつ行い平均値を計算した．
+
+CPU使用率の推移を\figref{fig:cpu-usage}に，I/O wait率の推移を\figref{fig:iowait}に示す．
+CPU使用率は1.5\%増加しており，Fugaのデータ退避処理がCPUリソースを多く消費することがわかる．
+一方I/O wait率については，一時的な増加は見られるものの増加幅は最大でも0.05\%程度であり，
+FugaがディスクI/Oに与えるオーバーヘッドは非常に小さい．
+全体として，FugaではCPUが主なボトルネックであると考えられる．
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.8\columnwidth]{doc/img/eval/cpu_usage.eps}
+  \caption{The transition of CPU usage.}
+  \label{fig:cpu-usage}
+\end{figure}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.8\columnwidth]{doc/img/eval/iowait_usage.eps}
+  \caption{The transition of I/O wait.}
+  \label{fig:iowait}
+\end{figure}
+
+\subsection{データ退避スループットの推定}
+前節で述べたパターン(C)ではFugaによる書き込みが発生するが，パターン(B)では発生しない．
+したがってパターン(B)および(C)での書き込みスループットの差を取ることで，Fugaが
+ファイルを退避させるスループットを推定することができる．
+30秒ごとの\texttt{iostat}の出力を5回取得し，統計値を計算した．
+
+\tabref{tab:performance_metrics}に示す結果から，本稿で示したFugaの実装は19MB/s程度のスループットで
+データを退避させることができると示唆される．
+Huangら \cite{huang2017flashguard} が行ったランサムウェア対策の開発の事前調査を参照すると，
+ランサムウェアによるファイル暗号化のスループットは1MB/sから4MB/s程度であると計算される．
+したがってFugaはランサムウェアによる暗号化よりも高速にデータを退避することができ，
+ランサムウェアのプロセスが検知技術によって特定および停止されるまでの間ファイルデータを保護する性能を持つ．
+
+\tabref{tab:performance_metrics}に示す結果より，本稿で示した Fuga の実装は約 19MB/s のスループットでデータを退避できることが示された．
+一方，Huangら\cite{huang2017flashguard}の調査に基づく計算によれば，ランサムウェアによるファイル暗号化のスループットは 1MB/s ～ 4MB/s 程度である．
+これにより，Fuga はランサムウェアが起動してから検知されるまでの間に発生する暗号化に対して，ファイルデータを退避によって保護できる性能を備えているといえる．
+
+\begin{table}[t]
+  \centering
+  \caption{Estimated performance metrics in MB/s.}
+  \begin{tabular}{lcc}
+    \hline
+    Metric  & Value [MB/s] \\
+    \hline
+    Mean    & 18.65        \\
+    Median  & 117.53       \\
+    Std Dev & 825.78       \\
+    \hline
+  \end{tabular}
+  \label{tab:performance_metrics}
+\end{table}
