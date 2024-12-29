@@ -1,2 +1,68 @@
 \chapter{評価}
 \label{chap:eval}
+ランサムウェアによる暗号化からデータを保護する性能と，Fuga稼働時のオーバーヘッドを評価した．
+評価はすべて\tabref{tab:experiment-machine-kashiwa}に示す物理マシン上で行った．
+\begin{table}[t]
+  \caption{Environment of the physical machine used for the evaluation.}
+  \label{tab:experiment-machine-kashiwa}
+  \hbox to\hsize{\hfil
+    \begin{tabular}{l|lll}
+      \hline \hline
+      OS       & Ubuntu 22.04.4 LTS                                  \\
+      ファイルシステム & ext4                                                \\
+      カーネル     & 6.3.0-060300-generic                                \\
+      CPU      & \scriptsize{Intel Xeon Silver 4314 @ 2.400GHZ × 64} \\
+      RAM      & 512GiB                                              \\ \hline
+    \end{tabular}\hfil}
+\end{table}
+
+\section{データ保護性能の評価}
+\subsection{実験シナリオ}
+指定されたパスのファイルを\texttt{read}し，OpenSSL内の関数で暗号化したのち新規ファイルに\texttt{write}するプログラムをC言語で実装した．
+暗号化方式はAES256を使用し，鍵長とIV長はそれぞれ32Bと16Bとした．\texttt{read}などの処理は4096Bのバッファに対して行うようにした．
+このプログラムをこれ以降「\textbf{暗号化プログラム}」と称する．
+
+OpenSSLが提供するコマンドを使用して，指定したバイト長の擬似乱数を含むファイルを生成する．
+そして生成したファイルに対して以下の手続きを行う．
+\begin{enumerate}
+  \item 実装した提案手法を実行する．
+  \item 暗号化プログラムでファイルを暗号化する．
+  \item 元のファイルと，Data Shelter内に作成されたファイルを用いて評価を行う．
+\end{enumerate}
+暗号化の対象となるファイルを「\textbf{元ファイル}」，Data Shelter内に作成されるファイルを「\textbf{退避ファイル}」と呼ぶ．
+
+この実験におけるデータ保護性能の評価指標として，\textbf{一致率}を定義した．
+一致率は，退避ファイルと元ファイルがどの程度一致しているかを表す指標である．
+元ファイルと退避ファイルのデータをバイト値の配列とみなし，先頭から配列の値を調べて一致している個数を数え,
+その個数を元ファイルのバイトサイズで割ると一致率が求められる．
+元ファイルが\texttt{[1, 2, 3, 4, 5]}，退避ファイルが\texttt{[1, 2, 4]}の場合，先頭の1と2が一致しているので
+この時の一致率は$\frac{2}{5}=0.4$である．
+
+\subsection{予備実験の結果}
+先行研究\cite{css2024}で示した実装をによる提案手法の一致率を予備実験で評価した．
+結果を\figref{fig:seq-vs-par-exp}および\figref{fig:seq-vs-par-inc}に示す．
+Evacuation Moduleが実行する3つの処理Read，Decode，Writeのそれぞれの処理時間の分布を\figref{fig:elapsed-time}に示す．
+\begin{figure}[h]
+  \centering
+  \begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=\columnwidth]{doc/img/eval/seqential_vs_parallel_match_p4_exp.eps}
+    \caption{左}
+    \label{fig:seq-vs-par-exp}
+  \end{minipage}
+  \begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=\columnwidth]{doc/img/eval/seqential_vs_parallel_match_p4_inc.eps}
+    \caption{右}
+    \label{fig:seq-vs-par-inc}
+  \end{minipage}
+\end{figure}
+
+\begin{figure}[t]
+  \begin{center}
+    \includegraphics[width=\columnwidth]{doc/img/eval/hakohige_sequential.eps}
+  \end{center}
+  \caption{foobar}
+  \label{fig:elapsed-time}
+\end{figure}
+
