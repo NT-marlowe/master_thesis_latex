@@ -2,11 +2,10 @@
 To address the threat of ransomware, it is essential not only to detect ransomware activities quickly to prevent further damage,
 but also to have methods for recovering data in case the attack succeeds.
 While recovery using periodic snapshots is a common approach, their coarse granularity makes frequent backups impractical, increasing the risk of data loss.
-In this study, we propose Fuga, a system that ensures data recovery by evacuating data to an isolated storage area just before ransomware compromises files.
-Fuga reactively performs file-level backups, addressing the limitations of snapshot-based approaches while reducing the cost of false positives.
-We presented the design of Fuga and its implementation strategies tailored to different methods of ransomware file compromise.
-Furthermore, we implemented Fuga using eBPF, and
+In this study, we propose a system that ensures data recovery by evacuating data to an isolated storage area just before ransomware compromises files.
+It reactively performs file-level backups, addressing the limitations of snapshot-based approaches while reducing the cost of false positives.
+We presented the design of our proposed system and its implementation strategies tailored to different methods of ransomware file compromise.
+Furthermore, we implemented it using eBPF, and
 evaluated its data protection performance and overhead across various file sizes.
 conducted evaluation experiments.
-% The results demonstrated the data protection capabilities of Fuga, from which we confirmed a throughput that surpasses ransomware encryption speed.
-The results demonstrate that Fuga is effective and practical as a data protection system against ransomware.
+The results demonstrate that our proposed system is effective and practical as a data protection system against ransomware.

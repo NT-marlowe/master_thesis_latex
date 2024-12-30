@@ -34,7 +34,7 @@ eBPF以前のBPFを明確に区別するためにcBPF (classical BPF) と呼ぶ�
 eBPFシステムの概要を\figref{fig:ebpf-overview}に示す．
 特殊なC言語で記述されたeBPFプログラムはBPFバイトコードにコンパイルされ，\texttt{bpf}システムコールを通じてカーネルにロードされる．
 ロードされたeBPFプログラムはeBPF verifierによって検証され，安全性が確認された後にJITコンパイルされ，カーネル内で実行される．
-本研究におけるFugaの実装に関連性の高い要素について詳述する．
+本研究における提案手法の実装に関連性の高い要素について詳述する．
 \begin{figure}[t]
   \begin{center}
     \includegraphics[width=\columnwidth]{doc/img/ebpf-overview.eps}
@@ -53,7 +53,7 @@ eBPFプログラムでイベントをフックすることを「eBPFプログラ
 % 例えばXDPはネットワークインタフェースの受信パケット処理にeBPFプログラムをアタッチするためのprogram typeである．
 % eBPFにはprogram typeという概念があり，これはeBPFプログラムがどのようなイベントにフックされるかを示す．
 eBPFにはフックポイントという概念があり，eBPFプログラムが特定のイベントに応じて動作するために接続されるカーネルやユーザスペースの機能的なエントリポイントを指す．
-本研究におけるFugaの実装では以下のフックポイントを利用している．
+本研究における提案手法の実装では以下のフックポイントを利用している．
 \begin{itemize}
   \item \textbf{uprobe}：ユーザ空間プログラムが実行する関数のエントリ
   \item \textbf{fentry/fexit}：カーネル関数のエントリ/終了
