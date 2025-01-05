@@ -1,7 +1,8 @@
 \chapter{提案手法の実装}
 \label{chap:implementation}
 \ref{chap:design}章で述べた提案手法の設計をもとに提案手法を実装した．
-本稿の実装は，TMP節で述べたケースの実例として，OpenSSLを利用して暗号化を行うランサムウェアを対象としている．
+% 本稿の実装は，TMP節で述べたケースの実例として，OpenSSLを利用して暗号化を行うランサムウェアを対象としている．
+本稿の実装はOpenSSLを利用して暗号化を行うランサムウェアを対象としている．
 カーネル空間のプログラムはeBPF \cite{WhatiseB81:online} を利用して，
 ユーザ空間のプログラムはGo言語を用いて実装した．
 本稿の執筆時点においてeBPFは実用上Linux環境のみで利用可能であるため，
@@ -13,10 +14,12 @@ Linux環境にて実装を行った．
   \hbox to\hsize{\hfil
     \begin{tabular}{l|lll}
       \hline
+      \hline
       Linuxカーネル  & 6.3.0-060300-generic \\
       CPUアーキテクチャ & amd64                \\
       clang      & 14.0.0-1ubuntu1.1    \\
       Goコンパイラ    & go1.22.5 linux/amd64 \\
+      \hline
     \end{tabular}\hfil}
 \end{table}
 
@@ -29,12 +32,13 @@ Detectorの実装は本研究のスコープ外であることに注意する．
 Capturerは，OpenSSL内の暗号化関数をuprobeでフックするeBPFプログラムとして実装した．
 暗号化関数には引数として平文データが格納されているバッファへのポインタが渡されるため，
 eBPFプログラム内でこのポインタをキャプチャしユーザ空間からカーネル空間へ平文データをコピーする．
-コピーされた平文データは，関連するメタデータとともに暗号化イベントを表す構造体に格納され，
+コピーされた平文データは，関連するメタデータとともに暗号化イベントを表す構造体（\coderef{code:enc_data_event}）に格納され，
 eBPF mapのリングバッファを介してEvacuation Moduleに送信される．
 なお，本稿で示す実装においてはOpenSSLの暗号化関数のみを対象としているが，
 OpenSSL以外の暗号化ライブラリにも容易に同じ手法を適用することができる．
 
 \subsubsection{Collector}
+ファイル$f$の先頭から$off$バイト目からデータ$d$が読み込まれた時，$f$を$d$に対する\textbf{元ファイル}，$off$を元ファイル上の\textbf{オフセット}と呼ぶ．
 CollectorはCapturerが取得した平文データに対して，
 元ファイルの絶対パスと元ファイル上のオフセットを取得する機能を持つ．
 上述したようにCollectorがアクセスできるのは平文データのポインタのみであり，ポインタから絶対パスやオフセットを直接取得することはできない．
@@ -61,6 +65,16 @@ CWDはLinuxカーネルにおいて各ユーザプロセスの状態を管理す
 この性質を利用して，FDをkeyとし，オフセットをvalueとするハッシュマップにオフセットを保存する．
 \texttt{open(2)}のフックによりファイルが開かれた際にハッシュマップにkey = 0, value = FD のエントリを追加しておき，
 \texttt{lseek(2)}および\texttt{read(2)}が実行された際にvalueを更新しておく．
+
+\begin{lstlisting}[caption=Data structure that represents data encryption by a user process., label=code:enc_data_event, language=C]
+  struct enc_data_event_t {
+    unsigned char data[MAX_DATA_LEN]; // plaintext data
+    int data_len;                     
+    char filename[MAX_FILENAME_LEN];  // relative path
+    char cwd[MAX_PATH_LEN]; 
+    long offset;
+  };
+\end{lstlisting}
 
 \begin{lstlisting}[caption=Signatures of the related system calls. The comment lines indicate the return value on success / error., label=code:syscalls, language=C]
   // a file descriptor / -1
