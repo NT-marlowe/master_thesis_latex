@@ -165,14 +165,24 @@ CPU使用率は1.5\%増加しており，提案手法のデータ退避処理が
 
 \tabref{tab:performance_metrics}に示す結果から，本稿で示した提案手法の実装は19MB/s程度のスループットで
 データを退避させることができると示唆される．
+ここで，ランサムウェアがデータを暗号化するスループットを推定し，提案手法のスループットと比較する．
 Huangら \cite{huang2017flashguard} が行ったランサムウェア対策の開発の事前調査を参照すると，
 ランサムウェアによるファイル暗号化のスループットは1MB/sから4MB/s程度であると計算される．
+\cite{huang2017flashguard}から引用したデータ，および筆者による計算結果を\tabref{tab:ransomware_performance}に示す．
 したがって提案手法はランサムウェアによる暗号化よりも高速にデータを退避することができ，
-ランサムウェアのプロセスが検知技術によって特定および停止されるまでの間ファイルデータを保護する性能を持つ．
+ランサムウェアのプロセスが検知技術によって特定および停止されるまでの間ファイルデータを保護する性能を持つといえる．
 
-\tabref{tab:performance_metrics}に示す結果より，本稿で示した提案手法の実装は約19MB/sのスループットでデータを退避できることが示された．
-一方，Huangら\cite{huang2017flashguard}の調査に基づく計算によれば，ランサムウェアによるファイル暗号化のスループットは1MB/s ～ 4MB/s 程度である．
-これにより，提案手法はランサムウェアが起動してから検知されるまでの間に発生する暗号化に対して，ファイルデータを退避によって保護できる性能を備えているといえる．
+\tabref{tab:ransomware_performance}のデータは，
+本研究の実験環境（\tabref{tab:experiment-machine-kashiwa}）と比較して計算資源が限られた環境で取得されたものである．ことに注意する必要がある．
+よってランサムウェアの暗号化スループットは，本研究の実験環境にて計測した場合，より高い数値が得られる可能性がある．
+しかし，筆者は依然として提案手法がランサムウェアに対して十分な性能を持つと考える．
+なぜなら\tabref{tab:performance_metrics}に示す結果は$p = 4$および$|RB| = 1$MiBの設定で得られたものであり，
+ランサムウェアの暗号化スループットが\tabref{tab:ransomware_performance}の数値よりも向上するような環境においては，
+提案手法のパラメータを調整することでスループットを向上させることができるからである．
+
+% \tabref{tab:performance_metrics}に示す結果より，本稿で示した提案手法の実装は約19MB/sのスループットでデータを退避できることが示された．
+% 一方，Huangら\cite{huang2017flashguard}の調査に基づく計算によれば，ランサムウェアによるファイル暗号化のスループットは1MB/s ～ 4MB/s 程度である．
+% これにより，提案手法はランサムウェアが起動してから検知されるまでの間に発生する暗号化に対して，ファイルデータを退避によって保護できる性能を備えているといえる．
 
 \begin{table}[t]
   \centering
@@ -188,3 +198,33 @@ Huangら \cite{huang2017flashguard} が行ったランサムウェア対策の�
   \end{tabular}
   \label{tab:performance_metrics}
 \end{table}
+
+
+\begin{table}[htbp]
+  \centering
+  \caption{Ransomware families and their encryption performance.
+    The throughput column is calculated independently by the author,
+    whereas the data for the other columns are cited from \cite{huang2017flashguard}.}
+
+  \label{tab:ransomware_performance}
+  \begin{tabular}{lccc}
+    \hline
+    Family         & Encrypted Data Size (GB) & $T$ (min) & Throughput (MB/s) \\
+    \hline
+    CTB-locker     & 1.9                      & 14        & 2.23              \\
+    Jigsaw         & 3.2                      & 16        & 3.33              \\
+    Mtobef         & 2.2                      & 16        & 2.29              \\
+    Maktub         & 4.0                      & 22        & 3.03              \\
+    Stampado       & 2.3                      & 27        & 1.42              \\
+    Cerver         & 3.7                      & 37        & 1.67              \\
+    Locky          & 4.1                      & 43        & 1.59              \\
+    7ev3n          & 4.0                      & 44        & 1.52              \\
+    TeslaCrypt     & 3.5                      & 44        & 1.33              \\
+    HydraCrypt     & 4.1                      & 70        & 0.98              \\
+    CroptoFortress & 3.9                      & 75        & 0.87              \\
+    CryptoWall     & 4.0                      & 75        & 0.89              \\
+    \hline
+  \end{tabular}
+\end{table}
+
+
