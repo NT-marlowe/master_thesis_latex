@@ -3,11 +3,15 @@
 
 \section{概要}
 Fugaの設計を\figref{fig:system-architecture}に示す．
-Fugaはコンポーネントとして\textbf{Detector}，\textbf{Process Monitor}，\textbf{Evacuation Module}，\textbf{Data Shelter}を含む．
-
-ランサムウェアの疑いがあるプロセスをDetectorが検出してProcess Monitorに通知する．
-Process Monitorは指定されたプロセスが侵害しようとするファイルのデータを取得してEvacuation Moduleに送信する．
-Evacuation ModuleはProcess Monitorから受け取ったデータを処理し，Data Shelter内に侵害対象のファイルを退避させる．
+本システムは，ランサムウェアの侵害を検知し，侵害の影響を受ける直前のデータを退避させることを目的としており，
+\textbf{Detector}，\textbf{Process Monitor}，\textbf{Evacuation Module}，\textbf{Data Shelter}の4つのコンポーネントで構成される．
+まず，Detectorはランサムウェアの疑いがあるユーザプロセスを特定し，そのプロセスの識別子をProcess Monitorに通知する．
+Process MonitorはDetectorから通知を受け取り，指定されたプロセスを監視する．
+そして監視対象のプロセスが実行する暗号化関数や関連するシステムコールにフックを挿入する，
+このフックにより，暗号化前のファイルコンテンツデータの取得とファイルメタデータの収集が行われる．
+取得されたコンテンツデータとメタデータは，Process MonitorによってEvacuation Moduleに送信され，
+Evacuation Moduleによって適切な形式に加工された後，
+ランサムウェアから隔離されたストレージであるData Shelterに退避される．
 
 % なお，ここでいう「ファイルの侵害」とは，暗号化を行ったりランダムなデータで上書きしたりすることでファイルを利用不可能にする振る舞いを指す．
 \begin{figure}[t]
