@@ -1,6 +1,6 @@
-\chapter{提案手法の実装}
+\chapter{Fugaの実装}
 \label{chap:implementation}
-\ref{chap:design}章で述べた提案手法の設計をもとに提案手法を実装した．
+\ref{chap:design}章で述べた設計をもとにFugaを実装した．
 % 本稿の実装は，TMP節で述べたケースの実例として，OpenSSLを利用して暗号化を行うランサムウェアを対象としている．
 本稿の実装はOpenSSLを利用して暗号化を行うランサムウェアを対象としている．
 カーネル空間のプログラムはeBPF \cite{WhatiseB81:online} を利用して，
@@ -24,7 +24,7 @@ Linux環境にて実装を行った．
 \end{table}
 
 \section{各コンポーネントの実装}
-本節では提案手法の実装特有の詳細を説明する．
+本節ではFugaの実装特有の詳細を説明する．
 Detectorの実装は本研究のスコープ外であることに注意する．
 
 \subsection{Process Monitor}

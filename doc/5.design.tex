@@ -1,9 +1,9 @@
-\chapter{提案手法の設計}
+\chapter{Fugaの設計}
 \label{chap:design}
 
 \section{概要}
-提案手法の設計を\figref{fig:system-architecture}に示す．
-提案手法はコンポーネントとして\textbf{Detector}，\textbf{Process Monitor}，\textbf{Evacuation Module}，\textbf{Data Shelter}を含む．
+Fugaの設計を\figref{fig:system-architecture}に示す．
+Fugaはコンポーネントとして\textbf{Detector}，\textbf{Process Monitor}，\textbf{Evacuation Module}，\textbf{Data Shelter}を含む．
 
 ランサムウェアの疑いがあるプロセスをDetectorが検出してProcess Monitorに通知する．
 Process Monitorは指定されたプロセスが侵害しようとするファイルのデータを取得してEvacuation Moduleに送信する．
@@ -13,7 +13,7 @@ Evacuation ModuleはProcess Monitorから受け取ったデータを処理し，
 \begin{figure}[t]
   \centering
   \includegraphics[width=\columnwidth]{doc/img/system_overview.eps}
-  \caption{The overview of the proposed system.}
+  \caption{The overview of Fuga, the proposed system.}
   \label{fig:system-architecture}
 \end{figure}
 
@@ -63,7 +63,7 @@ Process Monitorとそのような通信プロトコルを形成することは�
 
 あるユーザプロセスから別のユーザプロセスへのデータコピーを実現することが困難なためである．
 共有メモリや明示的なプロセス間通信を利用すればデータの受け渡しは可能であるが，
-提案手法において監視されるユーザプロセスがそのような合意をProcess Monitorと形成することはできない．
+Fugaにおいて監視されるユーザプロセスがそのような合意をProcess Monitorと形成することはできない．
 加えて，カーネル空間のプログラムを用いたランサムウェア対策は，ランサムウェアによって無効化される可能性が非常に低い \cite{mitigation-modern}という利点がある．
 権限昇格を行うランサムウェアにはProcess Monitorを無効化する可能性もあるが，
 Process Monitorの無効化はランサムウェアの特徴であるため，検知される可能性が高い．
