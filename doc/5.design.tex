@@ -90,7 +90,7 @@ Evacuation Moduleはユーザ空間で実行されるコンポーネントであ
 詳細は後述するが，Data Shelterの形態としてはローカルストレージ，NAS (Network Attached Storage)，またはリモートホストなどが考えられる．
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\columnwidth]{doc/img/how-to-evacuate.eps}
+  \includegraphics[width=0.9\columnwidth]{doc/img/how-to-evacuate.eps}
   \caption{The Evacuation Module processes and transfers content data and metadata to a Data Shelter,
     which may be a local storage, network storage, or remote host, depending on its configuration.}
   \label{fig:how-to-evacuate}
@@ -110,9 +110,16 @@ Evacuation Moduleは，その実装がData Shelterの形態に依存すること
 
 \subsection{Data Shelter}
 ランサムウェアによる侵害から隔離されたデータ領域を，本稿ではData Shelterと呼ぶ．
-ランサムウェアを使用した攻撃が発覚した後，本システムの利用者はData Shelterに退避されたファイルを取得し
+Fugaの利用者は，ランサムウェア攻撃が発覚した後，Data Shelterに退避されたファイルを取得し，
 侵害されたファイルを復旧することができる．
 
-Data Shelterとして使用するデータストアにはいくつか選択肢が考えられる．
-アクセス制限を適用したローカルのディレクトリが最もシンプルであるが，
-NASなどを利用してホスト外部にData Shelterを配置してもよい．
+\figref{fig:how-to-evacuate}に示すように，Data Shelterはローカルストレージ，NAS，またはリモートホストなどの形態で構成可能である．
+特に，リモートホストをData Shelterとして利用する場合，Evacuation Module側でファイルを作成して転送する方法と，
+Evacuation Moduleが送信したデータを元にData Shelter側でファイルを作成する方法のいずれかを選択することができる．
+\figref{fig:how-to-evacuate}では後者の処理を示している．
+後者の場合，Data Shelterとなるリモートホスト上でスナップショットを作成したり，
+ファイル保存時にシャーディング \cite{what-is-sharding}やその他の冗長性向上手法を適用したりすることで，
+データバックアップをさらに堅牢にすることができる．
+% Data Shelterとして使用するデータストアにはいくつか選択肢が考えられる．
+% アクセス制限を適用したローカルのディレクトリが最もシンプルであるが，
+% NASなどを利用して，Fugaを展開するホストの外部にData Shelterを配置してもよい．
