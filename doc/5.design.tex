@@ -83,11 +83,19 @@ Process Monitorの無効化はランサムウェアの特徴であるため，�
 
 \subsection{Evacuation Module}
 Evacuation Moduleはユーザ空間で実行されるコンポーネントである．
-Evacuation Moduleはまず，Process Monitorからコンテンツデータおよびメタデータを受け取る．
-この時，データの表現形式がProcess MonitorとEvacuation Moduleとの間で異なる場合は，適切に変換が行われる．
-そしてこれらのデータを用いて，侵害されるファイルのデータを退避するための処理を行う．
-具体的な処理の内容は，Data Shelterの形態によって決定される．
-詳細は後述するが，Data Shelterの形態としてはローカルストレージ，NASあるいはリモートホストなどが考えられる．
+このコンポーネントはまず，Process Monitorからコンテンツデータおよびメタデータを受け取る．
+この際，Process MonitorとEvacuation Moduleとの間でデータの表現形式が異なる場合は，必要に応じてデータ形式を適切に変換する．
+そしてこれらのデータを用いて，侵害されるファイルのデータを退避する処理を実行する．
+具体的な処理の内容は，Data Shelterの形態によって決定される．処理の概要を\figref{fig:how-to-evacuate}に示す．
+詳細は後述するが，Data Shelterの形態としてはローカルストレージ，NAS (Network Attached Storage)，またはリモートホストなどが考えられる．
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{doc/img/how-to-evacuate.eps}
+  \caption{The Evacuation Module processes and transfers content data and metadata to a Data Shelter,
+    which may be a local storage, network storage, or remote host, depending on its configuration.}
+  \label{fig:how-to-evacuate}
+\end{figure}
+
 
 Evacuation Moduleは，その実装がData Shelterの形態に依存することを考慮し，ユーザ空間で実行されるプログラムとして設計されている．
 この設計により，実装やデバッグ，修正がカーネル空間プログラムよりも容易に行える．
