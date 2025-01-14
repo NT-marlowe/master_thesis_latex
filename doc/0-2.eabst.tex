@@ -1,11 +1,18 @@
-% Ransomware has become an increasingly serious threat in recent years, causing significant economic losses and social disruption.
-To address the threat of ransomware, it is essential not only to detect ransomware activities quickly to prevent further damage,
-but also to have methods for recovering data in case the attack succeeds.
-While recovery using periodic snapshots is a common approach, their coarse granularity makes frequent backups impractical, increasing the risk of data loss.
-In this study, we propose a system that ensures data recovery by evacuating data to an isolated storage area just before ransomware compromises files.
-It reactively performs file-level backups, addressing the limitations of snapshot-based approaches while reducing the cost of false positives.
-We presented the design of our proposed system and its implementation strategies tailored to different methods of ransomware file compromise.
-Furthermore, we implemented it using eBPF, and
-evaluated its data protection performance and overhead across various file sizes.
-conducted evaluation experiments.
-The results demonstrate that our proposed system is effective and practical as a data protection system against ransomware.
+Ransomware threats have been increasing year by year.
+In recent years, high-value organizations such as government agencies have frequently become targets of ransomware attacks, and the attack methods are becoming more systematic and sophisticated.
+To counter such threats, rapid detection of ransomware and prevention of damage escalation are essential.
+However, it is difficult to prevent all damages solely through detection, and there is a need for methods to enable recovery from damage after ransomware attacks.
+
+Snapshot-based data backup methods, widely used for recovery, have limitations.
+They cannot preserve data updates that occur between the latest snapshot and the onset of the attack.
+Moreover, since snapshots typically target entire file systems or disks, they result in increased storage consumption.
+
+In this study, we propose a novel method to protect data from ransomware attacks.
+The proposed method reactively backs up data on a per-file basis and protects it in an isolated area, preserving the data in the state it was in just before the ransomware attack.
+Specifically, the method identifies suspicious processes using an online detection approach and hooks file-compromising operations executed by those processes.
+When a hooked operation is triggered, the data of the targeted file is copied to an isolated area, protecting it from ransomware.
+This approach prevents data loss due to updates and enables backing up only the necessary files.
+% 
+In our study, we implemented the proposed method in a Linux environment, assuming ransomware using a standard encryption library.
+Using a ransomware-mimicking program, we conducted experiments to evaluate data protection performance and overhead for various file sizes.
+The results demonstrated that the proposed method provides sufficient data protection performance against ransomware encryption speed, with minimal performance overhead.
