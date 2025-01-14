@@ -1,5 +1,64 @@
 \chapter{議論}
 \label{chap:discussion}
+
+\section{ストレージ消費量の推定}
+一定の時間間隔$T$でスナップショットを取得するとして，
+スナップショットの取得とFugaによるデータ保護の間で，$T$の間のストレージの消費量を比較する．
+スナップショットを取得する対象領域に存在する全データの総量を$N$バイトとすると，
+スナップショットによるストレージの消費量は
+\begin{equation}
+  \label{eq:snapshot-storage}
+  N
+\end{equation}
+である．
+一方，Fugaによるデータ退避は，誤検知による正常なデータ更新とランサムウェアによるデータ侵害の両方を対象とする．
+\begin{itemize}
+  \item Fugaが利用する検知手法の誤検知率を$fpr \;(0 \le fpr < 1)$
+  \item $T$あたりに発生するデータ更新の量を$D$バイト
+  \item ランサムウェアが侵害するデータの割合を$c \; (0 < c \le 1)$
+\end{itemize}
+% ，$T$あたりに発生するデータ更新の量を$D$バイト，
+% ランサムウェアが侵害するデータの割合を$c \; (0 < c \le 1)$とすると，
+と定義すると，
+Fugaによるストレージの消費量は
+\begin{equation}
+  \label{eq:fuga-storage}
+  fpr \times D + c \times N
+\end{equation}
+である．
+Fugaがスナップショットよりもストレージを節約できる条件は，\eqref{eq:snapshot-storage}と\eqref{eq:fuga-storage}を比較して
+\begin{equation}
+  % \label{eq:storage-compare}
+  fpr \times D + c \times N < N
+\end{equation}
+すなわち
+\begin{equation}
+  \label{eq:storage-compare}
+  \frac{D}{N} < \frac{1-c}{fpr}
+\end{equation}
+である．
+ここで，スナップショット対象領域内のデータ更新量$D$は，その領域の総データ量$N$と正の相関があると仮定する．
+これは，対象領域が大きくなるほど，領域内で更新されるデータ量も増加する傾向があるためである．
+この仮定に基づけば，更新量の比率$\frac{D}{N}$を用いて議論を行うことが妥当である．
+よって，ストレージ消費量削減の観点から，$\frac{1-c}{fpr}$の値を評価することが次の検討対象となる．
+
+2013年から2019年までのランサムウェア検知手法を対象とした調査 \cite{berrueta2019survey} によると，
+検知手法の誤検知率は$10^{-4}$から$0.1$の範囲にある．
+実験環境ではなく実際の運用環境においては誤検知率の増加が予想されることと，
+Fugaは保守的な検知を行うことから，$fpr = 0.2$と仮定する．
+このとき，$c$の値を複数変化させると
+\begin{equation}
+  \frac{1-c}{fpr} =
+  \begin{cases}
+    4.5 & (c = 0.1) \\
+    2.5 & (c = 0.5) \\
+    0   & (c = 1)
+  \end{cases}
+\end{equation}
+
+
+
+
 \section{ランサムウェアの多様性への対応}
 \ref{subsec:ransom-behavior}節で述べたように，ランサムウェアは暗号化を中心に様々な形態で被害を引き起こす．
 ランサムウェアがファイルを侵害する方法は\ref{subsec:ransom-behavior}節の内容を踏まえて以下の3つに分類することができる．

@@ -445,6 +445,7 @@
 \newcommand\figref[1]{\textbf{図~\ref{#1}}}
 \newcommand\tabref[1]{\textbf{表~\ref{#1}}}
 \newcommand\coderef[1]{\textbf{コード~\ref{#1}}}
+\newcommand\eqref[1]{\textbf{式(\ref{#1})}}
 
 
 
