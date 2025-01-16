@@ -1,8 +1,9 @@
 \chapter{Fugaの設計}
 \label{chap:design}
-
+本章では，提案手法を実現するためのソフトウェアシステムとして\textbf{Fuga}\footnote{ふーが．フーガ．}の設計を説明する．
+設計および機能の概要を述べたのち，Fugaを構成する各コンポーネントの設計について詳細に説明する．
 \section{概要}
-Fugaの設計を\figref{fig:system-architecture}に示す．
+Fugaの設計の概要を\figref{fig:system-architecture}に示す．
 本システムは，ランサムウェアの侵害を検知し，侵害の影響を受ける直前のデータを退避させることを目的としており，
 \textbf{Detector}，\textbf{Process Monitor}，\textbf{Evacuation Module}，\textbf{Data Shelter}の4つのコンポーネントで構成される．
 まず，Detectorはランサムウェアの疑いがあるユーザプロセスを特定し，そのプロセスの識別子をProcess Monitorに通知する．
