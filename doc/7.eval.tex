@@ -169,7 +169,7 @@ FugaがディスクI/Oに与えるオーバーヘッドは小さい．
 ファイルを退避させるスループットを推定することができる．
 30秒ごとの\texttt{iostat}の出力を5回取得し，統計値を計算した．
 
-\tabref{tab:performance_metrics}に示す結果から，本稿で示したFugaの実装は19MB/s程度のスループットで
+\tabref{tab:performance_metrics}に示す結果から，本稿で示したFugaの実装は40MB/s程度のスループットで
 データを退避させることができると示唆される．
 ここで，ランサムウェアがデータを暗号化するスループットを推定し，Fugaのスループットと比較する．
 Huangら \cite{huang2017flashguard} が行ったランサムウェア対策の開発の事前調査を参照すると，
@@ -198,9 +198,9 @@ Fugaのパラメータを適切に調整することでスループットの向�
     \hline
     Metric  & Value [MB/s] \\
     \hline
-    Mean    & 18.65        \\
-    Median  & 117.53       \\
-    Std Dev & 825.78       \\
+    Mean    & 339.65       \\
+    Median  & 39.612       \\
+    Std Dev & 565.81       \\
     \hline
   \end{tabular}
   \label{tab:performance_metrics}
